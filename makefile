@@ -27,8 +27,10 @@ lupi: game/codec
 	    printf '%s %s sfx/%s {"type":"audio"}\n' "$$(date +%s)0000" "$$size" "$$name" >> "$$manifest"; \
 	  fi; \
 	done
+	@test -s "$(CURRENT)/img/bg" || { echo "img/bg ausente no cartucho"; exit 1; }
 	rm -f "$(LUPI)"
 	cd "$(CURRENT)" && zip -r -X "$(LUPI)" .
+	cd "$(CURRENT)" && zip -0 -X "$(LUPI)" img/bg
 	@echo "Gerado: $(LUPI)"
 
 clean:

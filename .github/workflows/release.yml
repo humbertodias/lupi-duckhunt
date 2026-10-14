@@ -24,14 +24,25 @@ jobs:
           sudo apt-get install -y lua5.4 zip imagemagick
           sudo ln -sf "$(command -v lua5.4)" /usr/local/bin/lua
           if ! command -v magick >/dev/null; then
-            sudo ln -sf "$(command -v convert)" /usr/local/bin/magick
+            printf '%s\n' \
+              '#!/bin/sh' \
+              'if [ "${1-}" = "identify" ]; then' \
+              '  shift' \
+              '  exec identify "$@"' \
+              'fi' \
+              'exec convert "$@"' \
+              | sudo tee /usr/local/bin/magick >/dev/null
+            sudo chmod +x /usr/local/bin/magick
           fi
+          convert -size 2x2 xc:red /tmp/lupi-px.png
+          test "$(magick identify -format '%w %h' /tmp/lupi-px.png)" = "2 2"
 
       - name: Build cartridge
         run: |
           set -euo pipefail
           make lupi
           test -s duckhunt.lupi
+          unzip -l duckhunt.lupi | grep -q 'img/bg$'
           unzip -l duckhunt.lupi | grep -q 'sfx/bark.ogg'
 
       - name: Release .lupi
