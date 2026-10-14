@@ -29,6 +29,19 @@ local function clamp(v, lo, hi)
   return v
 end
 
+local function play_fx(name)
+  if sfx and sfx.fx then sfx.fx("sfx/" .. name) end
+end
+
+local function play_music(name)
+  if not (sfx and sfx.music) then return end
+  if name then
+    sfx.music("sfx/" .. name)
+  else
+    sfx.music(-1)
+  end
+end
+
 local function fly_index(anim)
   local m = anim % 4
   if m == 3 then return 1 end
@@ -65,6 +78,7 @@ local play_clock = 0
 local dog_out = false
 local dog_pop = 0
 local dog_kind = "laugh"
+local bark_count = 0
 local end_clock = 0
 
 local function reset_hits()
@@ -166,6 +180,9 @@ local function update_duck(duck)
   end
   if duck.frame == 0 then
     duck.anim = duck.anim + 1
+    if not duck.dead and not duck.fly_off and duck.anim % 4 == 0 then
+      play_fx("quack")
+    end
   end
   local past_left = (x + spr.width) < 0
   local past_top = (y + spr.height) < 0
@@ -193,6 +210,7 @@ local function draw_duck(duck)
   if duck.y < H / 2 then
     draw_spr(Duck, "fall", duck.x, duck.y, false)
   else
+    if not duck.finished then play_fx("drop") end
     duck.finished = true
   end
 end
@@ -200,6 +218,7 @@ end
 local function shoot()
   if rounds <= 0 then return false end
   rounds = rounds - 1
+  play_fx("blast")
   return true
 end
 
@@ -215,6 +234,7 @@ local function begin_round()
   phase = "intro"
   intro_clock = 0
   dog_anim = 0
+  bark_count = 0
   dog_x, dog_y = ox(250), oy(350)
   notice = { "ROUND", tostring(round_num) }
   reset_hits()
@@ -295,6 +315,10 @@ local function update_intro()
   if dog_anim < 5 then
     dog_x = dog_x + SX
   else
+    if bark_count < 2 and intro_clock % DOG_STEP == 0 then
+      play_fx("bark")
+      bark_count = bark_count + 1
+    end
     local af = dog_anim % 5
     if af == 1 then
       dog_x = dog_x + ox(5)
@@ -335,6 +359,7 @@ local function update_play()
     for _, duck in ipairs(ducks) do
       if fired and duck_hit(duck) then
         score = score + 10
+        play_fx("point")
         if hit_index < 10 then
           hit_index = hit_index + 1
           hit[hit_index] = true
@@ -392,10 +417,12 @@ local function update_play()
     if missed >= 4 then
       phase = "gameover"
       notice = { "GAME OVER", "" }
+      play_music("gameover")
     else
       phase = "roundend"
       end_clock = 0
       notice = nil
+      play_music("next-round")
     end
     return
   end
@@ -410,6 +437,11 @@ local function update_play()
     dog_kind = "one"
   else
     dog_kind = "laugh"
+  end
+  if killed == 0 then
+    play_fx("flyaway")
+  else
+    play_fx("hit")
   end
   dog_out = true
   dog_pop = 0

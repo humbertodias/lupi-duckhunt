@@ -7,6 +7,8 @@ game/codec:
 	mkdir -p "$(STAGE)"
 	cp "$(MAKEFILE_DIR)game.lua" "$(STAGE)/game.lua"
 	cp -R "$(MAKEFILE_DIR)media/img" "$(STAGE)/img"
+	mkdir -p "$(STAGE)/sfx"
+	cp "$(MAKEFILE_DIR)media/sfx/"*.ogg "$(STAGE)/sfx/"
 	cd "$(MAKEFILE_DIR)lupi-codec" && lua run.lua "$(STAGE)" "$(MAKEFILE_DIR)dist"
 
 clean:
