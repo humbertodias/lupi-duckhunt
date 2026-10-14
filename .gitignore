@@ -42,4 +42,5 @@ luac.out
 *.hex
 
 dist/
+duckhunt.lupi
 .DS_Store

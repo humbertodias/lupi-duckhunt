@@ -10,11 +10,11 @@ Precisa de Lua 5.5 e do submódulo `lupi-codec`.
 
 ```sh
 git submodule update --init
-make game/codec
-lupinho dist/current
+make lupi
+lupinho duckhunt.lupi
 ```
 
-`make game/codec` monta o cartucho em `dist/current`. `make clean` apaga `dist/` e `.build/`.
+`make lupi` monta o cartucho e grava `duckhunt.lupi` (um zip). `make game/codec` deixa a mesma pasta aberta em `dist/current`. `make clean` apaga `duckhunt.lupi`, `dist/` e `.build/`.
 
 ## Controles
 
