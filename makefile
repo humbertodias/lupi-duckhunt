@@ -40,14 +40,13 @@ web: lupi
 	rm -rf "$(WEB)"
 	mkdir -p "$(WEB)"
 	docker run --rm --entrypoint bash \
+		-e HOST_UID="$(shell id -u)" \
+		-e HOST_GID="$(shell id -g)" \
 		-v "$(LUPI):/game.lupi:ro" \
 		-v "$(WEB):/out" \
+		-v "$(MAKEFILE_DIR)media/web/fullscreen.css:/fullscreen.css:ro" \
 		$(SDK) \
-		-lc 'set -eo pipefail; source /opt/emsdk/emsdk_env.sh; set -u; make -C /lupinho/lupinho/src web-game GAME_PATH=/game.lupi; cp -a /lupinho/lupinho/dist/webgame/. /out/'
-	cp "$(MAKEFILE_DIR)media/web/fullscreen.css" "$(WEB)/fullscreen.css"
-	perl -i -pe 's{</head>}{<link rel="stylesheet" href="fullscreen.css"></head>}' "$(WEB)/game.html"
-	cp "$(WEB)/game.html" "$(WEB)/index.html"
-	touch "$(WEB)/.nojekyll"
+		-lc 'set -eo pipefail; source /opt/emsdk/emsdk_env.sh; set -u; make -C /lupinho/lupinho/src web-game GAME_PATH=/game.lupi; cp -a /lupinho/lupinho/dist/webgame/. /out/; cp /fullscreen.css /out/fullscreen.css; sed -i "s|</head>|<link rel=\"stylesheet\" href=\"fullscreen.css\"></head>|" /out/game.html; cp /out/game.html /out/index.html; touch /out/.nojekyll; chown -R "$$HOST_UID:$$HOST_GID" /out'
 
 clean:
 	rm -rf dist .build "$(LUPI)"
