@@ -22,6 +22,8 @@ https://github.com/user-attachments/assets/5a3fb60d-20ed-470f-844d-a52f51b28c05
 
 `make lupi` monta o cartucho e grava `duckhunt.lupi` (um zip). `make game/codec` deixa a mesma pasta aberta em `dist/current`. `make clean` apaga `duckhunt.lupi`, `dist/` e `.build/`.
 
+Cada push na `main` publica o cartucho em [duckhunt.lupi](https://github.com/humbertodias/lupi-duckhunt/releases/latest/download/duckhunt.lupi).
+
 ## Controles
 
 | Ação | Console | Teclado (lupinho) | Mouse |

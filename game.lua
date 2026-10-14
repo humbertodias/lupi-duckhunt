@@ -3,6 +3,36 @@
 -- A, B, or a click restarts.
 
 require "palette"
+if not Palette.hex then
+  function Palette.hex(rgb)
+    rgb = math.floor(tonumber(rgb) or 0)
+    local r = math.floor(rgb / 65536) % 256
+    local g = math.floor(rgb / 256) % 256
+    local b = rgb % 256
+    local target = math.floor(b / 8) * 1024 + math.floor(g / 8) * 32 + math.floor(r / 8)
+    local function channel_dist(color)
+      local cr = color % 32
+      local cg = math.floor(color / 32) % 32
+      local cb = math.floor(color / 1024) % 32
+      local tr = target % 32
+      local tg = math.floor(target / 32) % 32
+      local tb = math.floor(target / 1024) % 32
+      local dr, dg, db = cr - tr, cg - tg, cb - tb
+      return dr * dr + dg * dg + db * db
+    end
+    local limit = #Palette
+    if limit > 256 then limit = 256 end
+    local best, best_d = 2, math.huge
+    for i = 2, limit do
+      local d = channel_dist(Palette[i])
+      if d < best_d then
+        best, best_d = i, d
+        if d == 0 then break end
+      end
+    end
+    return best - 1
+  end
+end
 local Sprites = require "sprites"
 local Dog = Sprites.img.dog
 local Duck = Sprites.img.duck
