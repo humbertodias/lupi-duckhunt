@@ -15,6 +15,7 @@ lupinho duckhunt.lupi
 | Alvo | Resultado |
 | --- | --- |
 | `make lupi` | `duckhunt.lupi` |
+| `make web` | jogo web em `.build/webgame/`, via `hldtux/lupinho-sdk` |
 | `make game/codec` | pasta aberta em `dist/current` |
 | `make clean` | apaga `duckhunt.lupi`, `dist/` e `.build/` |
 
@@ -22,7 +23,11 @@ lupinho duckhunt.lupi
 
 O fundo `img/bg` entra no zip sem compressão. O lupinho falha ao inflar um arquivo muito comprimido acima de cerca de 32 KB, e o fundo tem 129600 bytes.
 
-Cada push na `main` publica o cartucho em [duckhunt.lupi](https://github.com/humbertodias/lupi-duckhunt/releases/latest/download/duckhunt.lupi). O workflow está em `.github/workflows/release.yml`. No Ubuntu o ImageMagick 6 não tem o comando `magick`; o workflow instala um atalho para `identify` e `convert`.
+Cada push na `main` publica o cartucho em [duckhunt.lupi](https://github.com/humbertodias/lupi-duckhunt/releases/latest/download/duckhunt.lupi) (`.github/workflows/release.yml`) e a versão web em [humbertodias.github.io/lupi-duckhunt](https://humbertodias.github.io/lupi-duckhunt/) (`.github/workflows/pages.yml`).
+
+`make web` monta o `.lupi` e pede ao container `hldtux/lupinho-sdk` o `make web-game`, que embute o cartucho no Lupinho em WebAssembly. A pasta `.build/webgame` recebe `media/web/fullscreen.css` ligado no `game.html`.
+
+No Ubuntu o ImageMagick 6 não tem o comando `magick`; os workflows instalam um atalho para `identify` e `convert`. O Pages do repositório precisa estar em GitHub Actions.
 
 ## Áudio
 

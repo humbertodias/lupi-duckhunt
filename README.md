@@ -2,7 +2,9 @@
 
 Port de Duck Hunt para o console Lupi. Dois patos por vez, três tiros. Cada acerto vale 10 pontos. A rodada tem dez patos; quatro erros encerram o jogo.
 
-[duckhunt.lupi](https://github.com/humbertodias/lupi-duckhunt/releases/latest/download/duckhunt.lupi)
+Versão web: [humbertodias.github.io/lupi-duckhunt](https://humbertodias.github.io/lupi-duckhunt/)
+
+Versão desktop: [duckhunt.lupi](https://github.com/humbertodias/lupi-duckhunt/releases/latest/download/duckhunt.lupi)
 
 ```sh
 lupinho duckhunt.lupi
